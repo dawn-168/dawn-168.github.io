@@ -1,9 +1,405 @@
-<html>
-  <head>
-    <title>我的个人主页</title>
-  </head>
-  <body>
-    <h1>你好，欢迎来到我的GitHub主页！</h1>
-    <p>这是我第一个静态网站~</p>
-  </body>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试之家 - 专业报告管理平台</title>
+    <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .card-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-hover {
+            transition: all 0.2s;
+        }
+        .btn-hover:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3), 0 2px 4px -1px rgba(59, 130, 246, 0.1);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        /* 自定义样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 400px;
+            border-radius: 8px;
+        }
+        .modal-content h2 {
+            margin-top: 0;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+    <div class="min-h-screen flex flex-col">
+        <!-- 导航栏 -->
+        <nav class="bg-white dark:bg-gray-800 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <i class="fas fa-file-alt text-3xl text-blue-500 mr-2"></i>
+                            <span class="text-xl font-bold text-gray-800 dark:text-white">测试之家</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <button id="themeToggle" class="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                            <i class="fas fa-moon dark:hidden"></i>
+                            <i class="fas fa-sun hidden dark:inline"></i>
+                        </button>
+                        <button id="authBtn" class="ml-4 px-4 py-2 rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 btn-hover transition-colors">
+                            登录/注册
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 主要内容 -->
+        <main class="flex-grow">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <!-- 欢迎区域 -->
+                <div class="text-center mb-12 fade-in">
+                    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">专业测试报告管理平台</h1>
+                    <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                        上传、下载和管理您的测试报告，获取专业模板，提高工作效率
+                    </p>
+                </div>
+
+                <!-- 功能卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <!-- 上传报告卡片 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 card-hover fade-in" style="animation-delay: 0.1s;">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900 mr-4">
+                                <i class="fas fa-upload text-blue-500 dark:text-blue-300 text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white">上传报告</h3>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            从您的设备上传测试报告，支持多种文件格式
+                        </p>
+                        <label for="file-upload" class="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 btn-hover">
+                            <i class="fas fa-file-upload mr-2"></i> 选择文件
+                            <input id="file-upload" type="file" class="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                        </label>
+                    </div>
+
+                    <!-- 下载报告卡片 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 card-hover fade-in" style="animation-delay: 0.2s;">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900 mr-4">
+                                <i class="fas fa-download text-blue-500 dark:text-blue-300 text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white">下载报告</h3>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            从我们的资源库下载您需要的测试报告
+                        </p>
+                        <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 btn-hover" onclick="showDownloadModal()">
+                            <i class="fas fa-search mr-2"></i> 浏览报告
+                        </button>
+                    </div>
+
+                    <!-- 报告模板卡片 -->
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 card-hover fade-in" style="animation-delay: 0.3s;">
+                        <div class="flex items-center mb-4">
+                            <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900 mr-4">
+                                <i class="fas fa-file-alt text-blue-500 dark:text-blue-300 text-xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white">报告模板</h3>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            使用我们的专业模板快速创建标准化测试报告
+                        </p>
+                        <div class="space-y-2">
+                            <button class="w-full inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 btn-hover" onclick="downloadTemplate('performance')">
+                                <i class="fas fa-file-download mr-2"></i> 性能测试模板
+                            </button>
+                            <button class="w-full inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 btn-hover" onclick="downloadTemplate('security')">
+                                <i class="fas fa-file-download mr-2"></i> 安全测试模板
+                            </button>
+                            <button class="w-full inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 btn-hover" onclick="downloadTemplate('usability')">
+                                <i class="fas fa-file-download mr-2"></i> 用户体验测试模板
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最近报告 -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 fade-in" style="animation-delay: 0.4s;">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">最近报告</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">报告名称</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">类型</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">上传日期</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">性能测试报告</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">PDF</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">2023-06-15</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        <button class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 mr-3" onclick="downloadReport('performance-report.pdf')">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                        <button class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400">
+                                            <i class="fas fa-share-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">安全测试报告</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">DOCX</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">2023-06-10</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        <button class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 mr-3" onclick="downloadReport('security-report.docx')">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                        <button class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400">
+                                            <i class="fas fa-share-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="bg-white dark:bg-gray-800 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <i class="fas fa-file-alt text-xl text-blue-500 mr-2"></i>
+                        <span class="text-gray-800 dark:text-white font-medium">测试之家</span>
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                        © 2023 www.testreport.com 版权所有
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- 登录/注册模态框 -->
+        <div id="authModal" class="modal">
+            <div class="modal-content">
+                <h2 class="text-xl font-bold mb-4">用户认证</h2>
+                <div class="mb-4">
+                    <button id="loginBtn" class="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">登录</button>
+                </div>
+                <div class="mb-4">
+                    <button id="registerBtn" class="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600">注册</button>
+                </div>
+                <div id="authFormContainer"></div>
+            </div>
+        </div>
+
+        <!-- 下载模态框 -->
+        <div id="downloadModal" class="modal">
+            <div class="modal-content">
+                <h2 class="text-xl font-bold mb-4">下载报告</h2>
+                <div id="downloadList" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <script>
+            // 主题切换功能
+            const themeToggle = document.getElementById('themeToggle');
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            // 检查本地存储或系统偏好
+            const currentTheme = localStorage.getItem('theme') || 
+                               (prefersDarkScheme.matches ? 'dark' : 'light');
+            
+            if (currentTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+            
+            themeToggle.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            });
+
+            // 文件上传处理
+            const fileUpload = document.getElementById('file-upload');
+            fileUpload.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    const fileName = e.target.files[0].name;
+                    alert(`已选择文件: ${fileName}\n文件上传功能将在完整版本中实现`);
+                }
+            });
+
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // 淡入动画
+            document.addEventListener('DOMContentLoaded', () => {
+                const fadeElements = document.querySelectorAll('.fade-in');
+                fadeElements.forEach(el => {
+                    el.style.opacity = '0';
+                    setTimeout(() => {
+                        el.style.opacity = '1';
+                    }, 100);
+                });
+            });
+
+            // 登录/注册功能
+            const authBtn = document.getElementById('authBtn');
+            const authModal = document.getElementById('authModal');
+            const authFormContainer = document.getElementById('authFormContainer');
+
+            authBtn.addEventListener('click', () => {
+                authModal.style.display = 'block';
+            });
+
+            // 关闭模态框
+            window.addEventListener('click', (e) => {
+                if (e.target === authModal || e.target === downloadModal) {
+                    e.target.style.display = 'none';
+                }
+            });
+
+            // 注册/登录表单处理
+            document.getElementById('loginBtn').addEventListener('click', () => {
+                authFormContainer.innerHTML = `
+                    <form id="loginForm">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">邮箱</label>
+                            <input type="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">密码</label>
+                            <input type="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <button type="submit" class="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">登录</button>
+                    </form>
+                `;
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    alert('登录功能将在完整版本中实现');
+                });
+            });
+
+            document.getElementById('registerBtn').addEventListener('click', () => {
+                authFormContainer.innerHTML = `
+                    <form id="registerForm">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">用户名</label>
+                            <input type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">邮箱</label>
+                            <input type="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">密码</label>
+                            <input type="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <button type="submit" class="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600">注册</button>
+                    </form>
+                `;
+                document.getElementById('registerForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    alert('注册功能将在完整版本中实现');
+                });
+            });
+
+            // 下载报告模态框
+            function showDownloadModal() {
+                const downloadList = document.getElementById('downloadList');
+                downloadList.innerHTML = `
+                    <div class="mb-2">
+                        <button class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" onclick="downloadReport('performance-report.pdf')">
+                            性能测试报告.pdf
+                        </button>
+                    </div>
+                    <div class="mb-2">
+                        <button class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" onclick="downloadReport('security-report.docx')">
+                            安全测试报告.docx
+                        </button>
+                    </div>
+                    <div class="mb-2">
+                        <button class="w-full text-left px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" onclick="downloadReport('usability-report.xlsx')">
+                            用户体验测试报告.xlsx
+                        </button>
+                    </div>
+                `;
+                document.getElementById('downloadModal').style.display = 'block';
+            }
+
+            // 下载报告函数
+            function downloadReport(filename) {
+                // 这里需要后端API支持，示例中使用虚拟下载
+                alert(`正在下载 ${filename}...`);
+                // 实际应使用：
+                // window.location.href = `/download/${filename}`;
+            }
+
+            // 下载模板函数
+            function downloadTemplate(type) {
+                const templates = {
+                    'performance': 'performance-template.docx',
+                    'security': 'security-template.xlsx',
+                    'usability': 'usability-template.pdf'
+                };
+                const filename = templates[type];
+                alert(`正在下载 ${filename}...`);
+                // 实际应使用：
+                // window.location.href = `/templates/${filename}`;
+            }
+        </script>
+    </div>
+</body>
 </html>
