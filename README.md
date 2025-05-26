@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>我的个人主页</title>
+    我的个人主页
   </head>
   <body>
     <h1>你好，欢迎来到我的GitHub主页！</h1>
